@@ -1,7 +1,4 @@
-import {
-  createBottomTabNavigator,
-  BottomTabNavigationProp,
-} from "@react-navigation/bottom-tabs";
+import { createBottomTabNavigator, BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { Platform } from "react-native";
 import Home from "@screens/Home";
 import Exercise from "@screens/Exercise";
@@ -15,7 +12,7 @@ import { color } from "native-base/lib/typescript/theme/styled-system";
 
 type AppRoutes = {
   home: undefined;
-  exercise: undefined;
+  exercise: { exerciseId: string };
   profile: undefined;
   history: undefined;
 };
@@ -46,9 +43,7 @@ export default function AppRoutes() {
         name="home"
         component={Home}
         options={{
-          tabBarIcon: ({ color }) => (
-            <HomeSVG fill={color} width={iconSize} height={iconSize} />
-          ),
+          tabBarIcon: ({ color }) => <HomeSVG fill={color} width={iconSize} height={iconSize} />,
         }}
       />
 
@@ -56,18 +51,14 @@ export default function AppRoutes() {
         name="history"
         component={History}
         options={{
-          tabBarIcon: ({ color }) => (
-            <HistorySVG fill={color} width={iconSize} height={iconSize} />
-          ),
+          tabBarIcon: ({ color }) => <HistorySVG fill={color} width={iconSize} height={iconSize} />,
         }}
       />
       <Screen
         name="profile"
         component={Profile}
         options={{
-          tabBarIcon: ({ color }) => (
-            <ProfileSVG fill={color} width={iconSize} height={iconSize} />
-          ),
+          tabBarIcon: ({ color }) => <ProfileSVG fill={color} width={iconSize} height={iconSize} />,
         }}
       />
       <Screen
