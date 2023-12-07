@@ -1,15 +1,16 @@
-import ExerciseHeader from "@components/ExerciseHeader";
-import { Center, Text, VStack, Image, Box, HStack, ScrollView, useToast } from "native-base";
-import SeriesSVG from "@assets/series.svg";
 import RepetitionsSVG from "@assets/repetitions.svg";
+import SeriesSVG from "@assets/series.svg";
 import Button from "@components/Button";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { AppError } from "@utils/AppError";
-import { api } from "@services/axios";
-import { ExerciseDTO } from "@dtos/ExerciseDTO";
-import { useEffect, useState } from "react";
+import ExerciseHeader from "@components/ExerciseHeader";
 import { Loading } from "@components/Loading";
+import { ExerciseDTO } from "@dtos/ExerciseDTO";
+import { useHistory } from "@hooks/useHistory";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
+import { api } from "@services/axios";
+import { AppError } from "@utils/AppError";
+import { Box, HStack, Image, ScrollView, Text, VStack, useToast } from "native-base";
+import { useEffect, useState } from "react";
 
 type RouteParamsProps = {
   exerciseId: string;
@@ -17,14 +18,11 @@ type RouteParamsProps = {
 
 export default function Exercise() {
   const [isLoading, setIsLoading] = useState(true);
-  const [sendingRegister, setSendingRegister] = useState(false);
-
   const route = useRoute();
   const toast = useToast();
+  const { historyPost } = useHistory();
   const navigation = useNavigation<AppNavigatorRoutesProps>();
-
   const [exercise, setExercise] = useState<ExerciseDTO>({} as ExerciseDTO);
-
   const { exerciseId } = route.params as RouteParamsProps;
 
   async function fetchExerciseDetails() {
@@ -50,32 +48,30 @@ export default function Exercise() {
   }
 
   async function handleExerciseHistoryRegister() {
-    try {
-      setSendingRegister(true);
-      const response = await api.post(`/history`, { exercise_id: exerciseId });
-      toast.show({
-        title: "Parabéns! Exercício registrado no seu histórico.",
-        placement: "top",
-        bgColor: "green.500",
-        alignItems: "center",
-        textAlign: "center",
-      });
-      navigation.navigate("history");
-    } catch (error) {
-      const isAppError = error instanceof AppError;
-      const title = isAppError ? error.message : "Não foi possível registrar o exercício ";
-      toast.show({
-        title,
-        placement: "top",
-        bgColor: "red.500",
-        alignItems: "center",
-        textAlign: "center",
-      });
-    } finally {
-      setSendingRegister(false);
-    }
+    historyPost.mutate(exerciseId, {
+      onSuccess: () => {
+        toast.show({
+          title: "Parabéns! Exercício registrado no seu histórico.",
+          placement: "top",
+          bgColor: "green.500",
+          alignItems: "center",
+          textAlign: "center",
+        });
+        navigation.navigate("history");
+      },
+      onError: (error) => {
+        const isAppError = error instanceof AppError;
+        const title = isAppError ? error.message : "Não foi possível registrar o exercício ";
+        toast.show({
+          title,
+          placement: "top",
+          bgColor: "red.500",
+          alignItems: "center",
+          textAlign: "center",
+        });
+      },
+    });
   }
-
   useEffect(() => {
     fetchExerciseDetails();
   }, [exerciseId]);
@@ -118,7 +114,7 @@ export default function Exercise() {
               </HStack>
               <Button
                 title="Marcar como realizado"
-                isLoading={sendingRegister}
+                isLoading={historyPost.isPending}
                 onPress={handleExerciseHistoryRegister}
               />
             </Box>
