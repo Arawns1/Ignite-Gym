@@ -1,5 +1,5 @@
 import { TouchableOpacity, TouchableOpacityProps } from "react-native";
-import React from "react";
+import React, { memo } from "react";
 import { HStack, Heading, Text, VStack, Icon } from "native-base";
 import { Entypo } from "@expo/vector-icons";
 import { ExerciseDTO } from "@dtos/ExerciseDTO";
@@ -10,7 +10,7 @@ interface ExerciseCardProps extends TouchableOpacityProps {
   data: ExerciseDTO;
 }
 
-export default function ExerciseCard({ data, ...rest }: ExerciseCardProps) {
+function ExerciseCardComponent({ data, ...rest }: ExerciseCardProps) {
   return (
     <TouchableOpacity {...rest}>
       <HStack bg={"gray.500"} alignItems={"center"} p={2} pr={4} rounded={"md"} mb={3}>
@@ -33,3 +33,6 @@ export default function ExerciseCard({ data, ...rest }: ExerciseCardProps) {
     </TouchableOpacity>
   );
 }
+export const ExerciseCard = memo(ExerciseCardComponent, (prevProps, nextProps) => {
+  return Object.is(prevProps.data, nextProps.data);
+});

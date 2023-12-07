@@ -9,7 +9,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
 import { api } from "@services/axios";
 import { AppError } from "@utils/AppError";
-import { Box, HStack, Image, ScrollView, Text, VStack, useToast } from "native-base";
+import { Box, HStack, Image, ScrollView, Text, VStack, Toast } from "native-base";
 import { useEffect, useState } from "react";
 
 type RouteParamsProps = {
@@ -19,7 +19,6 @@ type RouteParamsProps = {
 export default function Exercise() {
   const [isLoading, setIsLoading] = useState(true);
   const route = useRoute();
-  const toast = useToast();
   const { historyPost } = useHistory();
   const navigation = useNavigation<AppNavigatorRoutesProps>();
   const [exercise, setExercise] = useState<ExerciseDTO>({} as ExerciseDTO);
@@ -35,7 +34,7 @@ export default function Exercise() {
       const title = isAppError
         ? error.message
         : "Não foi possível carregar os detalhes do exercício ";
-      toast.show({
+      Toast.show({
         title,
         placement: "top",
         bgColor: "red.500",
@@ -50,7 +49,7 @@ export default function Exercise() {
   async function handleExerciseHistoryRegister() {
     historyPost.mutate(exerciseId, {
       onSuccess: () => {
-        toast.show({
+        Toast.show({
           title: "Parabéns! Exercício registrado no seu histórico.",
           placement: "top",
           bgColor: "green.500",
@@ -62,7 +61,7 @@ export default function Exercise() {
       onError: (error) => {
         const isAppError = error instanceof AppError;
         const title = isAppError ? error.message : "Não foi possível registrar o exercício ";
-        toast.show({
+        Toast.show({
           title,
           placement: "top",
           bgColor: "red.500",

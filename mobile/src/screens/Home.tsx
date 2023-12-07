@@ -1,6 +1,6 @@
-import ExerciseCard from "@components/ExerciseCard";
+import { ExerciseCard } from "@components/ExerciseCard";
 import { Group } from "@components/Group";
-import { HomeHeader } from "@components/HomeHeader";
+import { HomeHeader } from "@components/HomeHeaderComponent";
 import { Loading } from "@components/Loading";
 import { Feather } from "@expo/vector-icons";
 import { useExercise } from "@hooks/useExercise";
@@ -59,7 +59,7 @@ export default function Home() {
         <VStack flex={1} px={8}>
           <HStack justifyContent={"space-between"} mb={5}>
             <Heading color="gray.200" fontSize="md" fontFamily={"heading"}>
-              Exercicios
+              Exercícios
             </Heading>
             <Text color="gray.200" fontSize="sm">
               {exercisesQuery.data?.length || 0} exercícios

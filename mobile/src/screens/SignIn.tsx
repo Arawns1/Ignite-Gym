@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, VStack, Text, Center, Heading, ScrollView, useToast } from "native-base";
+import { Image, VStack, Text, Center, Heading, ScrollView, Toast } from "native-base";
 import BackgroundImg from "@assets/background.png";
 import { Input } from "@components/Input";
 import Button from "@components/Button";
@@ -26,7 +26,6 @@ export function SignIn() {
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
 
   const { signIn } = useAuth();
-  const toast = useToast();
 
   const {
     control,
@@ -43,7 +42,7 @@ export function SignIn() {
   async function handleSignIn({ email, senha }: SignInFormData) {
     try {
       await signIn(email, senha);
-      toast.show({
+      Toast.show({
         title: "Logado com sucesso",
         placement: "top",
         alignItems: "center",
@@ -55,7 +54,7 @@ export function SignIn() {
         ? error.message
         : "Não foi possível criar sua conta. Tente novamente mais tarde";
 
-      toast.show({
+      Toast.show({
         title,
         placement: "top",
         alignItems: "center",
