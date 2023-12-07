@@ -1,5 +1,5 @@
 import { Logo } from "@components/Logo";
-import { Center, Heading, Image, ScrollView, VStack, useToast } from "native-base";
+import { Center, Heading, Image, ScrollView, VStack, Toast } from "native-base";
 import React from "react";
 import BackgroundImg from "@assets/background.png";
 import { Input } from "@components/Input";
@@ -35,7 +35,6 @@ interface FormDataProps {
 
 export function SignUp() {
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
-  const toast = useToast();
   const { signIn } = useAuth();
 
   const {
@@ -56,7 +55,7 @@ export function SignUp() {
     try {
       await api.post("/users", { name, email, password });
       await signIn(email, password);
-      toast.show({
+      Toast.show({
         title: "Cadastro realizado com sucesso",
         placement: "top",
         alignItems: "center",
@@ -68,7 +67,7 @@ export function SignUp() {
         ? error.message
         : "Não foi possível criar sua conta. Tente novamente mais tarde";
 
-      toast.show({
+      Toast.show({
         title,
         placement: "top",
         alignItems: "center",

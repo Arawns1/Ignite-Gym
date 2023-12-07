@@ -1,12 +1,12 @@
 import { useContext, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
-import { useToast } from "native-base";
+
 import { api } from "@services/axios";
 import { useMutation } from "@tanstack/react-query";
 import { AuthContext } from "@contexts/AuthContext";
+import { Toast } from "native-base";
 export const useUserPhotoSelect = () => {
-  const toast = useToast();
   const { user, updateUserProfile } = useContext(AuthContext);
 
   const photoMutation = useMutation({ mutationFn: handleUserPhotoSelect });
@@ -27,7 +27,7 @@ export const useUserPhotoSelect = () => {
       if (PhotoURI) {
         const photoInfo = await FileSystem.getInfoAsync(PhotoURI);
         if (photoInfo.exists && photoInfo.size > 3 * 1024 * 1024) {
-          toast.show({
+          Toast.show({
             title: "Imagem muito grande",
             placement: "top",
             description: "A imagem não pode ter mais que 3MB",
@@ -58,7 +58,7 @@ export const useUserPhotoSelect = () => {
         userUpdated.avatar = avatarUpdatedResponse.data.avatar;
         updateUserProfile(userUpdated);
 
-        toast.show({
+        Toast.show({
           title: "Foto atualizada!",
           placement: "top",
           bgColor: "green.500",

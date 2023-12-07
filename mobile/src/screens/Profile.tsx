@@ -8,7 +8,7 @@ import { useAuth } from "@hooks/useAuth";
 import { useUserPhotoSelect } from "@hooks/useUserPhotoSelect";
 import { api } from "@services/axios";
 import { AppError } from "@utils/AppError";
-import { Center, Heading, ScrollView, Text, VStack, useToast } from "native-base";
+import { Center, Heading, ScrollView, Text, Toast, VStack } from "native-base";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { TouchableOpacity } from "react-native";
@@ -47,7 +47,6 @@ export default function Profile() {
   const [isLoading, setIsLoading] = useState(false);
   const { photoMutation } = useUserPhotoSelect();
   const { user, updateUserProfile } = useAuth();
-  const toast = useToast();
 
   const {
     control,
@@ -70,7 +69,7 @@ export default function Profile() {
       await api.put("/users", data);
 
       await updateUserProfile(userUpdated);
-      toast.show({
+      Toast.show({
         title: "Perfil atualizado com sucesso",
         placement: "top",
         bgColor: "green.500",
@@ -80,7 +79,7 @@ export default function Profile() {
     } catch (error) {
       const isAppError = error instanceof AppError;
       const title = isAppError ? error.message : "Não foi possível atualizar o perfil";
-      toast.show({
+      Toast.show({
         title,
         placement: "top",
         bgColor: "red.500",

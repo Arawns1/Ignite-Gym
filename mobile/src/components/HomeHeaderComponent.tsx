@@ -5,7 +5,9 @@ import { TouchableOpacity } from "react-native";
 import { useAuth } from "@hooks/useAuth";
 import defaultUserPhotoImg from "@assets/userPhotoDefault.png";
 import { api } from "@services/axios";
-export function HomeHeader() {
+import { memo } from "react";
+
+function HomeHeaderComponent() {
   const { user, signOut } = useAuth();
 
   return (
@@ -39,3 +41,4 @@ export function HomeHeader() {
     </HStack>
   );
 }
+export const HomeHeader = memo(HomeHeaderComponent);
