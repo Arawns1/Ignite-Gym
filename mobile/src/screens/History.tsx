@@ -1,54 +1,28 @@
 import HistoryCard from "@components/HistoryCard";
 import { Loading } from "@components/Loading";
 import ScreenHeader from "@components/ScreenHeader";
-import { HistoryByDayDTO } from "@dtos/HistoryByDayDTO";
 import { useFocusEffect } from "@react-navigation/native";
-import { api } from "@services/axios";
-import { AppError } from "@utils/AppError";
-import { Center, Heading, VStack, SectionList, Text, useToast } from "native-base";
-import { useCallback, useState } from "react";
-
+import { Heading, SectionList, Text, VStack } from "native-base";
+import { useHistory } from "@hooks/useHistory";
+import { useCallback } from "react";
 export default function History() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [exercise, setExercise] = useState<HistoryByDayDTO[]>([]);
+  const {historyQuery} = useHistory();
 
-  const toast = useToast();
-
-  async function fetchHistory() {
-    try {
-      setIsLoading(true);
-      const response = await api.get(`/history`);
-      setExercise(response.data);
-    } catch (error) {
-      const isAppError = error instanceof AppError;
-      const title = isAppError ? error.message : "Não foi possível carregar o histórico ";
-      toast.show({
-        title,
-        placement: "top",
-        bgColor: "red.500",
-        alignItems: "center",
-        textAlign: "center",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  useFocusEffect(
-    useCallback(() => {
-      fetchHistory();
-    }, [])
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     historyQuery.refetch();
+  //   }, [])
+  // );
 
   return (
     <VStack flex={1}>
       <ScreenHeader title="Histórico de Componentes" />
 
-      {isLoading ? (
+      {historyQuery.isLoading ? (
         <Loading />
       ) : (
         <SectionList
-          sections={exercise}
+          sections={historyQuery.data}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <HistoryCard data={item} />}
           renderSectionHeader={({ section }) => (
@@ -56,7 +30,9 @@ export default function History() {
               {section.title}
             </Heading>
           )}
-          contentContainerStyle={exercise.length === 0 && { flex: 1, justifyContent: "center" }}
+          contentContainerStyle={
+            historyQuery.data.length === 0 && { flex: 1, justifyContent: "center" }
+          }
           ListEmptyComponent={() => (
             <Text color={"gray.100"} textAlign={"center"}>
               Não há exercícios registrados ainda.{"\n"} Vamos fazer exercícios hoje?

@@ -10,9 +10,6 @@ interface ExerciseCardProps extends TouchableOpacityProps {
   data: ExerciseDTO;
 }
 
-const blurhash =
-  "|VQmCrIU_3%Mxut7xuogRjxuM{ay%Mt7WBM{WBay~qxuD%RjoLoLRPM{fkRjfkWBM{oft6xuofWBRjxuxuNGRjayWVofoft7oLofWVWBoffkWBWBRjM{RjxuofkCt7t7aexut7WBWBWBRjaeofogoft7ofWBaeRjWBt7of";
-
 export default function ExerciseCard({ data, ...rest }: ExerciseCardProps) {
   return (
     <TouchableOpacity {...rest}>
@@ -20,9 +17,6 @@ export default function ExerciseCard({ data, ...rest }: ExerciseCardProps) {
         <Image
           source={`${api.defaults.baseURL}/exercise/thumb/${data.thumb}`}
           contentFit="cover"
-          transition={500}
-          placeholder={blurhash}
-          cachePolicy={"memory-disk"}
           style={{ width: 64, height: 64, marginRight: 16, borderRadius: 8 }}
         />
 
