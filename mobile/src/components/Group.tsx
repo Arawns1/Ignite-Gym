@@ -1,12 +1,12 @@
 import { Text, Pressable, IPressableProps } from "native-base";
-import React from "react";
+import React, { memo } from "react";
 
 interface GroupProps extends IPressableProps {
   name: string;
   isActive?: boolean;
 }
 
-export function Group({ name, isActive = false, ...rest }: GroupProps) {
+function GroupComponent({ name, isActive = false, ...rest }: GroupProps) {
   return (
     <Pressable
       mr={3}
@@ -35,3 +35,6 @@ export function Group({ name, isActive = false, ...rest }: GroupProps) {
     </Pressable>
   );
 }
+export const Group = memo(GroupComponent, (prevProps, nextProps) => {
+  return Object.is(prevProps.isActive, nextProps.isActive)
+});
