@@ -1,22 +1,16 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { HStack, VStack, FlatList, Heading, Text, useToast } from "native-base";
-import { HomeHeader } from "@components/HomeHeader";
-import { Group } from "@components/Group";
 import ExerciseCard from "@components/ExerciseCard";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { AppNavigatorRoutesProps } from "@routes/app.routes";
-import { AppError } from "@utils/AppError";
-import { api } from "@services/axios";
-import { ExerciseDTO } from "@dtos/ExerciseDTO";
+import { Group } from "@components/Group";
+import { HomeHeader } from "@components/HomeHeader";
 import { Loading } from "@components/Loading";
+import { Feather } from "@expo/vector-icons";
+import { useExercise } from "@hooks/useExercise";
+import { useNavigation } from "@react-navigation/native";
+import { AppNavigatorRoutesProps } from "@routes/app.routes";
+import { Box, FlatList, HStack, Heading, Icon, Text, VStack } from "native-base";
+import React, { useState } from "react";
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [groups, setGroups] = useState([]);
   const [groupSelected, setGroupSelected] = useState("antebraço");
-
-  const [exercises, setExercises] = useState<ExerciseDTO[]>([]);
-
-  const toast = useToast();
+  const { groupsQuery, exercisesQuery } = useExercise(groupSelected);
 
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
@@ -24,58 +18,25 @@ export default function Home() {
     navigation.navigate("exercise", { exerciseId });
   }
 
-  async function fetchGroups() {
-    try {
-      const response = await api.get("/groups");
-      setGroups(response.data);
-    } catch (error) {
-      const isAppError = error instanceof AppError;
-      const title = isAppError ? error.message : "Não foi possível carregar os grupos musculares";
-      toast.show({
-        title,
-        placement: "top",
-        bgColor: "red.500",
-        alignItems: "center",
-        textAlign: "center",
-      });
-    }
+  if (groupsQuery.error || exercisesQuery.error) {
+    return (
+      <VStack flex={1}>
+        <HomeHeader />
+        <Box flex={1} justifyContent="center" alignItems="center" opacity={0.8}>
+          <Icon as={Feather} name="alert-triangle" size={12} color="gray.200" />
+          <Text color="gray.200" fontSize="sm">
+            Erro ao carregar exercícios
+          </Text>
+        </Box>
+      </VStack>
+    );
   }
-
-  async function fetchExerciseByGroup() {
-    try {
-      setIsLoading(true);
-      const response = await api.get(`/exercises/bygroup/${groupSelected}`);
-      setExercises(response.data);
-    } catch (error) {
-      const isAppError = error instanceof AppError;
-      const title = isAppError ? error.message : "Não foi possível carregar os exercícios";
-      toast.show({
-        title,
-        placement: "top",
-        bgColor: "red.500",
-        alignItems: "center",
-        textAlign: "center",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    fetchGroups();
-  }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      fetchExerciseByGroup();
-    }, [groupSelected])
-  );
 
   return (
     <VStack flex={1}>
       <HomeHeader />
       <FlatList
-        data={groups}
+        data={groupsQuery.data}
         keyExtractor={(item) => item}
         renderItem={({ item }) => (
           <Group
@@ -91,7 +52,8 @@ export default function Home() {
         maxH={10}
         minH={10}
       />
-      {isLoading ? (
+
+      {exercisesQuery.isLoading ? (
         <Loading />
       ) : (
         <VStack flex={1} px={8}>
@@ -100,12 +62,12 @@ export default function Home() {
               Exercicios
             </Heading>
             <Text color="gray.200" fontSize="sm">
-              {exercises.length}
+              {exercisesQuery.data?.length || 0} exercícios
             </Text>
           </HStack>
 
           <FlatList
-            data={exercises}
+            data={exercisesQuery.data}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <ExerciseCard data={item} onPress={() => handleOpenExerciseDetails(item.id)} />
