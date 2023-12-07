@@ -15,6 +15,7 @@ type PromiseType = {
 
 const api = axios.create({
   baseURL: "http://192.168.0.115:3333",
+  timeout: 1000,
 }) as APIInstanceProps;
 
 let failedQueue: Array<PromiseType> = [];
