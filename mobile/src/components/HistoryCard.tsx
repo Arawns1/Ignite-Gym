@@ -17,6 +17,7 @@ export default function HistoryCard({ data }: HistoryCardProps) {
       rounded="md"
       alignItems={"center"}
       justifyContent={"space-between"}
+      testID="historyCardComponent"
     >
       <VStack mr={5} flex={1}>
         <Heading

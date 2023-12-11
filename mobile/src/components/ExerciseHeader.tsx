@@ -17,8 +17,8 @@ export default function ExerciseHeader({ name, type }: ExerciseHeaderProps) {
     navigation.goBack();
   }
   return (
-    <VStack px={4} bg="gray.600" pt={12}>
-      <TouchableOpacity onPress={handleGoBack}>
+    <VStack px={4} bg="gray.600" pt={12} testID="exerciseHeader">
+      <TouchableOpacity onPress={handleGoBack} testID="exerciseHeader__backButton">
         <Icon as={Feather} name="arrow-left" color="green.500" size={6} />
       </TouchableOpacity>
       <HStack justifyContent={"space-between"} mt={4} mb={8} alignItems={"center"}>

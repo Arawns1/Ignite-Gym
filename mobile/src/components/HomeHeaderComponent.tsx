@@ -11,7 +11,7 @@ function HomeHeaderComponent() {
   const { user, signOut } = useAuth();
 
   return (
-    <HStack bg="gray.600" pt={16} pb={5} px={8} alignItems={"center"}>
+    <HStack bg="gray.600" pt={16} pb={5} px={8} alignItems={"center"} testID="homeHeaderComponent">
       <UserPhoto
         source={
           user.avatar

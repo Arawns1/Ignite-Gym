@@ -33,7 +33,7 @@ export default function Home() {
   }
 
   return (
-    <VStack flex={1}>
+    <VStack flex={1} testID="homeScreen">
       <HomeHeader />
       <FlatList
         data={groupsQuery.data}
