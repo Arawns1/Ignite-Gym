@@ -9,6 +9,7 @@ interface GroupProps extends IPressableProps {
 function GroupComponent({ name, isActive = false, ...rest }: GroupProps) {
   return (
     <Pressable
+      testID="groupComponent"
       mr={3}
       w={24}
       h={10}
@@ -36,5 +37,5 @@ function GroupComponent({ name, isActive = false, ...rest }: GroupProps) {
   );
 }
 export const Group = memo(GroupComponent, (prevProps, nextProps) => {
-  return Object.is(prevProps.isActive, nextProps.isActive)
+  return Object.is(prevProps.isActive, nextProps.isActive);
 });

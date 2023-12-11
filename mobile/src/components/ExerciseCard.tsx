@@ -12,9 +12,10 @@ interface ExerciseCardProps extends TouchableOpacityProps {
 
 function ExerciseCardComponent({ data, ...rest }: ExerciseCardProps) {
   return (
-    <TouchableOpacity {...rest}>
+    <TouchableOpacity {...rest} testID="exerciseCard">
       <HStack bg={"gray.500"} alignItems={"center"} p={2} pr={4} rounded={"md"} mb={3}>
         <Image
+          testID="exerciseImage"
           source={`${api.defaults.baseURL}/exercise/thumb/${data.thumb}`}
           contentFit="cover"
           style={{ width: 64, height: 64, marginRight: 16, borderRadius: 8 }}
